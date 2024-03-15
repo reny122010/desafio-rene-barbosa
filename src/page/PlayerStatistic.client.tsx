@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import TeamSearch from '@/sections/TeamSearch.client';
 import PlayerSearch from '@/sections/PlayerSearch.client';
@@ -7,6 +7,8 @@ import SelectPlayer from '@/sections/SelectPlayer.client';
 import Level from '@/sections/Level.client';
 
 export default function PlayerStatistic() {
+  const [phase, setPhase] = useState(0);
+
   const [inputTeam, setInputTeam] = useState('');
   const [inputPlayer, setInputPlayer] = useState('');
   const [teams, setTeams] = useState([]);
@@ -18,25 +20,40 @@ export default function PlayerStatistic() {
   return (
     <div className="max-w-sm mx-auto mt-10">
       <div className="bg-white shadow-md rounded-lg p-6">
-        <TeamSearch inputTeam={inputTeam} setInputTeam={setInputTeam} setTeams={setTeams} />
+        {phase === 0 &&
+          <TeamSearch
+            inputTeam={inputTeam}
+            setInputTeam={setInputTeam}
+            setTeams={setTeams}
+            setPhase={setPhase}
+          />
+        }
 
-        <PlayerSearch
-          inputPlayer={inputPlayer}
-          selectedPlayer={selectedPlayer}
-          teams={teams}
-          selectedTeam={selectedTeam}
-          setSelectedTeam={setSelectedTeam}
-          setInputPlayer={setInputPlayer}
-          setPlayers={setPlayers}
-        />
+        {phase === 1 &&
+          <PlayerSearch
+            inputPlayer={inputPlayer}
+            selectedPlayer={selectedPlayer}
+            teams={teams}
+            selectedTeam={selectedTeam}
+            setSelectedTeam={setSelectedTeam}
+            setInputPlayer={setInputPlayer}
+            setPlayers={setPlayers}
+            setPhase={setPhase}
+          />
+        }
 
-        <SelectPlayer
-          selectedPlayer={selectedPlayer}
-          players={players}
-          setSelectedPlayer={setSelectedPlayer}
-          setStatistic={setStatistic} />
+        {phase === 2 &&
+          <SelectPlayer
+            selectedPlayer={selectedPlayer}
+            players={players}
+            setSelectedPlayer={setSelectedPlayer}
+            setStatistic={setStatistic}
+            setPhase={setPhase} />
+        }
 
-        <Level statistic={statistic} />
+        {phase === 3 &&
+          <Level statistic={statistic} />
+        }
       </div>
     </div>
   );

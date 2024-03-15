@@ -1,8 +1,15 @@
 "use client";
 import axiosInstance from '@/utils/httpInstance';
 import { Team, ResponsePlayers } from '@/interfaces/index';
+import { useEffect } from 'react';
 
-export default function PlayerSearch({ inputPlayer, selectedTeam, teams, setSelectedTeam, setInputPlayer, setPlayers }: any) {
+export default function PlayerSearch({ inputPlayer, selectedTeam, teams, setSelectedTeam, setInputPlayer, setPlayers, setPhase }: any) {
+  useEffect(() => {
+    setSelectedTeam();
+    setInputPlayer();
+    setPlayers([]);
+  }, []);
+
   const handleChangeTeam = (event: any) => {
     setSelectedTeam(event.target.value);
   };
@@ -14,11 +21,16 @@ export default function PlayerSearch({ inputPlayer, selectedTeam, teams, setSele
   const searchPlayers = async () => {
     const { data } = await axiosInstance(`/players?search=${inputPlayer}&season=2020&team=${selectedTeam}`).catch(() => null);
 
-    setPlayers(data.response.map(({ player }: ResponsePlayers) => ({
+    const players = data.response.map(({ player }: ResponsePlayers) => ({
       id: player.id,
       name: `${player.firstname} ${player.lastname}`,
       photo: player.photo,
-    })));
+    }));
+
+    if (players.length > 0) {
+      setPlayers(players);
+      setPhase(2)
+    }
   };
 
   return (

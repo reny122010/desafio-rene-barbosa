@@ -3,10 +3,13 @@ import axiosInstance from '@/utils/httpInstance';
 import { Player, PlayerStatistics } from '@/interfaces/index';
 import React, { useState, useEffect } from 'react';
 
-export default function SelectPlayer({ selectedPlayer, players, setSelectedPlayer, setStatistic }: any) {
+export default function SelectPlayer({ selectedPlayer, players, setSelectedPlayer, setStatistic, setPhase }: any) {
   const [playersSheets, setPlayers] = useState([]);
 
   useEffect(() => {
+    setSelectedPlayer();
+    setStatistic();
+
     function initClient() {
       window.gapi.client.init({
         apiKey: 'AIzaSyDXZr5DNdH2KVWFpY_HLOenwUIW82b5lws',
@@ -61,7 +64,8 @@ export default function SelectPlayer({ selectedPlayer, players, setSelectedPlaye
     const player = playersSheets.find(([id, _]) => id === selectedPlayer);
     const appearances = player ? parseInt(player[1]) : 0;
 
-    setStatistic({ goals, assists, appearances })
+    setStatistic({ goals, assists, appearances });
+    setPhase(3);
   }
 
   return (
