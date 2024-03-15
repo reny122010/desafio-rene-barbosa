@@ -1,8 +1,40 @@
 "use client";
 import axiosInstance from '@/utils/httpInstance';
-import { Team, ResponsePlayer, Player, PlayerStatistics } from '@/interfaces/index';
+import { Player, PlayerStatistics } from '@/interfaces/index';
+import React, { useState, useEffect } from 'react';
 
-export default function SelectPlayer({ selectedPlayer, players, setSelectedPlayer }: any) {
+export default function SelectPlayer({ selectedPlayer, players, setSelectedPlayer, setStatistic }: any) {
+  const [playersSheets, setPlayers] = useState([]);
+
+  useEffect(() => {
+    function initClient() {
+      window.gapi.client.init({
+        apiKey: 'AIzaSyDXZr5DNdH2KVWFpY_HLOenwUIW82b5lws',
+        discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"],
+      }).then(function () {
+        loadPlayers();
+      });
+    }
+
+    function loadPlayers() {
+      window.gapi.client.sheets.spreadsheets.values.get({
+        spreadsheetId: '17jaxr85veNcMJLoqNjMrYdMQdMTEGLPbL-JK9UXVCE4',
+        range: 'jogadores!A2:B', // Ajuste o intervalo conforme necessário
+      }).then(function (response) {
+        const range = response.result;
+        if (range.values.length > 0) {
+          setPlayers(range.values);
+          console.log(range.values)
+        } else {
+          console.log('Nenhum dado encontrado.');
+        }
+      }, function (response) {
+        console.error('Erro ao buscar dados: ' + response.result.error.message);
+      });
+    }
+
+    window.gapi.load('client', initClient);
+  }, []);
 
   const handleChangePlayerSelected = (event: any) => {
     setSelectedPlayer(event.target.value);
@@ -25,12 +57,11 @@ export default function SelectPlayer({ selectedPlayer, players, setSelectedPlaye
 
     const [response] = data.response;
 
-    console.log(response)
-
     const { goals, assists } = calculateGoalsAndAssists(response);
+    const player = playersSheets.find(([id, _]) => id === selectedPlayer);
+    const appearances = player ? parseInt(player[1]) : 0;
 
-    console.log(goals, assists)
-
+    setStatistic({ goals, assists, appearances })
   }
 
   return (
