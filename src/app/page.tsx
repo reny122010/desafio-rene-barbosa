@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 import React, { Suspense } from 'react';
 
-const SearchComponent = dynamic(() => import('../components/SearchComponent.client'), {
+const SearchComponent = dynamic(() => import('../page/PlayerStatistic.client'), {
   suspense: true,
   ssr: false,
 });
