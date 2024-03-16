@@ -29,12 +29,13 @@ export default function TeamSearch({ inputTeam, setInputTeam, setTeams, setPhase
       name: team.name,
       logo: team.logo,
     }))
-    console.log(data.errors)
+    console.log(data.errors && data.errors.length > 0)
 
-    if (data.errors) {
+    if (data.errors && data.errors.length > 0) {
       seterrorMenssage('Problema na API');
     }
     else if (teams.length > 0) {
+      console.log('FOI')
       setTeams(teams);
       setPhase(1)
     } else {

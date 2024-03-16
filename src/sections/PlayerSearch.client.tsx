@@ -9,6 +9,10 @@ export default function PlayerSearch({ inputPlayer, selectedTeam, teams, setSele
   const [errorMenssage, seterrorMenssage] = useState('');
 
   useEffect(() => {
+    setErrorIsVisible(true);
+  }, [errorMenssage])
+
+  useEffect(() => {
     setInputPlayer('');
     setPlayers([]);
     console.log('called')
@@ -35,6 +39,7 @@ export default function PlayerSearch({ inputPlayer, selectedTeam, teams, setSele
       setPlayers(players);
       setPhase(2)
     } else {
+      console.log(players.length > 0, errorMenssage)
       seterrorMenssage('Não possui jogador com esse nome, faça uma nova pesquisa');
     }
   };
@@ -51,7 +56,7 @@ export default function PlayerSearch({ inputPlayer, selectedTeam, teams, setSele
           onChange={handleChangeTeam}
           className="block text-black w-full px-4 py-2 mt-2 border rounded-md bg-white border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
         >
-          <option key='default' disabled selected defaultChecked>
+          <option key='default' value="" selected defaultChecked>
             Selecione um time
           </option>
           {teams.map((team: Team) => (

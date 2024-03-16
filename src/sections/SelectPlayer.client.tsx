@@ -11,6 +11,10 @@ export default function SelectPlayer({ selectedPlayer, players, setSelectedPlaye
   const [errorMenssage, seterrorMenssage] = useState('');
 
   useEffect(() => {
+    setErrorIsVisible(true);
+  }, [errorMenssage])
+
+  useEffect(() => {
     setStatistic();
 
     function initClient() {
@@ -83,7 +87,7 @@ export default function SelectPlayer({ selectedPlayer, players, setSelectedPlaye
           onChange={handleChangePlayerSelected}
           className="block text-black w-full px-4 py-2 mt-2 border rounded-md bg-white border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
         >
-          <option key='default' disabled selected defaultChecked>
+          <option key='default' value="" disabled selected defaultChecked>
             Selecione um jogador
           </option>
           {players.map((player: Player) => (
