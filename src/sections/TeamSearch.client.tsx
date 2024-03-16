@@ -5,8 +5,8 @@ import { useEffect } from 'react';
 
 export default function TeamSearch({ inputTeam, setInputTeam, setTeams, setPhase }: any) {
   useEffect(() => {
-    setInputTeam();
-    setTeams();
+    setInputTeam('');
+    setTeams([]);
   }, []);
 
   const handleInputChange = (event: any) => {

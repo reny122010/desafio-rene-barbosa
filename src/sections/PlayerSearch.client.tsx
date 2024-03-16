@@ -5,9 +5,9 @@ import { useEffect } from 'react';
 
 export default function PlayerSearch({ inputPlayer, selectedTeam, teams, setSelectedTeam, setInputPlayer, setPlayers, setPhase }: any) {
   useEffect(() => {
-    setSelectedTeam();
-    setInputPlayer();
+    setInputPlayer('');
     setPlayers([]);
+    console.log('called')
   }, []);
 
   const handleChangeTeam = (event: any) => {
@@ -32,6 +32,10 @@ export default function PlayerSearch({ inputPlayer, selectedTeam, teams, setSele
       setPhase(2)
     }
   };
+
+  const backStep = () => {
+    setPhase(0)
+  }
 
   return (
     <>
@@ -65,6 +69,15 @@ export default function PlayerSearch({ inputPlayer, selectedTeam, teams, setSele
           onClick={searchPlayers}
         >
           Buscar Jogador
+        </button>
+      </div>
+
+      <div className="flex space-x-4">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
+          onClick={backStep}
+        >
+          Voltar
         </button>
       </div>
     </>

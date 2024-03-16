@@ -1,6 +1,8 @@
 "use client";
 
-export default function Level({ statistic }: any) {
+import config from '@/utils/config';
+
+export default function Level({ statistic, playerId, setPhase }: any) {
   const defineLevel = () => {
 
     const { goals, assists, appearances } = statistic ?? {};
@@ -15,9 +17,19 @@ export default function Level({ statistic }: any) {
     return 'Não definido';
   }
 
+  const backStep = () => {
+    setPhase(2)
+  }
+
   return (
     <div className="flex space-x-4">
-      <p className='text-black'>Level {defineLevel()}</p>
+      <p className='text-black'>Level {defineLevel()} - Player id: {playerId}</p>
+      <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
+        onClick={backStep}
+      >
+        Voltar
+      </button>
     </div>
   );
 }

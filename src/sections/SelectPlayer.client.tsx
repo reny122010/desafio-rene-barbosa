@@ -2,17 +2,17 @@
 import axiosInstance from '@/utils/httpInstance';
 import { Player, PlayerStatistics } from '@/interfaces/index';
 import React, { useState, useEffect } from 'react';
+import config from '@/utils/config';
 
 export default function SelectPlayer({ selectedPlayer, players, setSelectedPlayer, setStatistic, setPhase }: any) {
   const [playersSheets, setPlayers] = useState([]);
 
   useEffect(() => {
-    setSelectedPlayer();
     setStatistic();
 
     function initClient() {
       window.gapi.client.init({
-        apiKey: 'AIzaSyDXZr5DNdH2KVWFpY_HLOenwUIW82b5lws',
+        apiKey: config.GOOGLE_KEY,
         discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"],
       }).then(function () {
         loadPlayers();
@@ -21,7 +21,7 @@ export default function SelectPlayer({ selectedPlayer, players, setSelectedPlaye
 
     function loadPlayers() {
       window.gapi.client.sheets.spreadsheets.values.get({
-        spreadsheetId: '17jaxr85veNcMJLoqNjMrYdMQdMTEGLPbL-JK9UXVCE4',
+        spreadsheetId: config.SPREADSHEET_ID,
         range: 'jogadores!A2:B', // Ajuste o intervalo conforme necessário
       }).then(function (response) {
         const range = response.result;
@@ -68,30 +68,44 @@ export default function SelectPlayer({ selectedPlayer, players, setSelectedPlaye
     setPhase(3);
   }
 
-  return (
-    <div className="flex space-x-4">
-      <select
-        value={selectedPlayer}
-        onChange={handleChangePlayerSelected}
-        className="block text-black w-full px-4 py-2 mt-2 border rounded-md bg-white border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-      >
-        <option key='default' disabled selected defaultChecked>
-          Selecione um jogador
-        </option>
-        {players.map((player: Player) => (
-          <option key={player.id} value={player.id}>
-            {player.name}
-          </option>
-        ))}
-      </select>
+  const backStep = () => {
+    setPhase(1)
+  }
 
-      <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
-        onClick={searchPlayerStatistic}
-      >
-        Selecionar Jogador
-      </button>
-    </div>
+  return (
+    <>
+      <div className="flex space-x-4">
+        <select
+          value={selectedPlayer}
+          onChange={handleChangePlayerSelected}
+          className="block text-black w-full px-4 py-2 mt-2 border rounded-md bg-white border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+        >
+          <option key='default' disabled selected defaultChecked>
+            Selecione um jogador
+          </option>
+          {players.map((player: Player) => (
+            <option key={player.id} value={player.id}>
+              {player.name}
+            </option>
+          ))}
+        </select>
+
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
+          onClick={searchPlayerStatistic}
+        >
+          Selecionar Jogador
+        </button>
+      </div>
+      <div className="flex space-x-4">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
+          onClick={backStep}
+        >
+          Voltar
+        </button>
+      </div>
+    </>
   );
 }
 

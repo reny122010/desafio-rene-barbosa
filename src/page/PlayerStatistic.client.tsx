@@ -52,7 +52,7 @@ export default function PlayerStatistic() {
         }
 
         {phase === 3 &&
-          <Level statistic={statistic} />
+          <Level statistic={statistic} setPhase={setPhase} playerId={selectedPlayer} />
         }
       </div>
     </div>
