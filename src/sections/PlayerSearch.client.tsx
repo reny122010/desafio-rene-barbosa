@@ -1,9 +1,13 @@
 "use client";
 import axiosInstance from '@/utils/httpInstance';
 import { Team, ResponsePlayers } from '@/interfaces/index';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import Toast from '@/components/Toast.client';
 
 export default function PlayerSearch({ inputPlayer, selectedTeam, teams, setSelectedTeam, setInputPlayer, setPlayers, setPhase }: any) {
+  const [errorisVisible, setErrorIsVisible] = useState(false);
+  const [errorMenssage, seterrorMenssage] = useState('');
+
   useEffect(() => {
     setInputPlayer('');
     setPlayers([]);
@@ -19,7 +23,7 @@ export default function PlayerSearch({ inputPlayer, selectedTeam, teams, setSele
   };
 
   const searchPlayers = async () => {
-    const { data } = await axiosInstance(`/players?search=${inputPlayer}&season=2020&team=${selectedTeam}`).catch(() => null);
+    const { data } = await axiosInstance(`/players?search=${inputPlayer}&season=2020&team=${selectedTeam}`).catch(() => seterrorMenssage('Problema na API'));
 
     const players = data.response.map(({ player }: ResponsePlayers) => ({
       id: player.id,
@@ -30,6 +34,8 @@ export default function PlayerSearch({ inputPlayer, selectedTeam, teams, setSele
     if (players.length > 0) {
       setPlayers(players);
       setPhase(2)
+    } else {
+      seterrorMenssage('Não possui jogador com esse nome, faça uma nova pesquisa');
     }
   };
 
@@ -80,6 +86,7 @@ export default function PlayerSearch({ inputPlayer, selectedTeam, teams, setSele
           Voltar
         </button>
       </div>
+      <Toast isVisible={errorisVisible} setIsVisible={setErrorIsVisible} message={errorMenssage} type='error' />
     </>
   );
 }

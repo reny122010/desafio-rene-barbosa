@@ -3,9 +3,12 @@ import axiosInstance from '@/utils/httpInstance';
 import { Player, PlayerStatistics } from '@/interfaces/index';
 import React, { useState, useEffect } from 'react';
 import config from '@/utils/config';
+import Toast from '@/components/Toast.client';
 
 export default function SelectPlayer({ selectedPlayer, players, setSelectedPlayer, setStatistic, setPhase }: any) {
   const [playersSheets, setPlayers] = useState([]);
+  const [errorisVisible, setErrorIsVisible] = useState(false);
+  const [errorMenssage, seterrorMenssage] = useState('');
 
   useEffect(() => {
     setStatistic();
@@ -27,11 +30,11 @@ export default function SelectPlayer({ selectedPlayer, players, setSelectedPlaye
         const range = response.result;
         if (range.values.length > 0) {
           setPlayers(range.values);
-          console.log(range.values)
         } else {
           console.log('Nenhum dado encontrado.');
         }
       }, function (response) {
+        seterrorMenssage('Erro ao buscar dados na planilh');
         console.error('Erro ao buscar dados: ' + response.result.error.message);
       });
     }
@@ -56,7 +59,7 @@ export default function SelectPlayer({ selectedPlayer, players, setSelectedPlaye
   }
 
   const searchPlayerStatistic = async () => {
-    const { data } = await axiosInstance(`/players?id=${selectedPlayer}&season=2020`).catch(() => null);
+    const { data } = await axiosInstance(`/players?id=${selectedPlayer}&season=2020`).catch(() => seterrorMenssage('Problema na API'));
 
     const [response] = data.response;
 
@@ -105,6 +108,7 @@ export default function SelectPlayer({ selectedPlayer, players, setSelectedPlaye
           Voltar
         </button>
       </div>
+      <Toast isVisible={errorisVisible} setIsVisible={setErrorIsVisible} message={errorMenssage} type='error' />
     </>
   );
 }

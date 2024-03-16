@@ -1,7 +1,5 @@
 "use client";
 
-import config from '@/utils/config';
-
 export default function Level({ statistic, playerId, setPhase }: any) {
   const defineLevel = () => {
 
